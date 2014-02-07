@@ -1,11 +1,12 @@
 (ns ttt-clojure.core
-  (:require [ttt-clojure.gamestate :refer :all]
+  (:require [ttt-clojure.helper :refer :all]
+            [ttt-clojure.gamestate :refer :all]
             [ttt-clojure.display :refer :all]))
 
 (defn get-next-move [gamestate]
   (cond
-    (= (turn gamestate) "x") (ask-human-for-move gamestate)
-    (= (turn gamestate) "o") (ask-human-for-move gamestate)))
+    (= (:turn gamestate) "x") (ask-human-for-move gamestate)
+    (= (:turn gamestate) "o") (ask-human-for-move gamestate)))
 
 (defn ttt [gamestate]
   (prn gamestate)
