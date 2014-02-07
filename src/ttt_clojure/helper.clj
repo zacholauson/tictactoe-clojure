@@ -30,3 +30,16 @@
   (let [board (:board gamestate)]
     (vec (remove nil? (map #(filter-possible-move %) (map-indexed vector board))))))
 
+(defn other-turn [gamestate]
+  (if (= "x" (:turn gamestate)) "o" "x"))
+
+(defn add-play-to-movelist [gamestate index]
+  (conj (:movelist gamestate) index))
+
+(defn add-play-to-board [gamestate index]
+  (assoc (:board gamestate) index (:turn gamestate)))
+
+(defn make-next-move [gamestate index]
+  {:movelist (add-play-to-movelist gamestate index)
+   :turn (other-turn gamestate)
+   :board (add-play-to-board gamestate index)})
