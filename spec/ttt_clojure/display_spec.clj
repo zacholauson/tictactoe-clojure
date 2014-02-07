@@ -1,7 +1,6 @@
 (ns ttt-clojure.display-spec
   (:require [speclj.core :refer :all]
-            [ttt-clojure.display :refer :all]
-            [ttt-clojure.gamestate :refer :all]))
+            [ttt-clojure.display :refer :all]))
 
 (describe "parse-int"
   (it "should return the integer version of the string passed to it"
