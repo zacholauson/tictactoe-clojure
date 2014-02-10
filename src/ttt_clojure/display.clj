@@ -7,7 +7,7 @@
     :else (throw (Exception. "cannot convert given argument to integer"))))
 
 (defn valid-move? [gamestate move]
-  (= "-" (get (:board gamestate) move)))
+  (= :- (get (:board gamestate) move)))
 
 (defn ask-human-for-move
   ([gamestate]

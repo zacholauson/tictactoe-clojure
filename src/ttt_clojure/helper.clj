@@ -14,14 +14,14 @@
 (defn tied? [gamestate]
   (every? #(true? %) (map (fn [line]
                             (and
-                              (if (some #{"x"} line) true false)
-                              (if (some #{"o"} line) true false))) (winning-lines gamestate))))
+                              (if (some #{:x} line) true false)
+                              (if (some #{:o} line) true false))) (winning-lines gamestate))))
 
 (defn game-over? [gamestate]
-  (or (win? gamestate "x") (win? gamestate "o") (tied? gamestate)))
+  (or (win? gamestate :x) (win? gamestate :o) (tied? gamestate)))
 
 (defn space-free? [space]
-  (if (= ["-"] (rest space)) true false))
+  (if (= [:-] (rest space)) true false))
 
 (defn filter-possible-move [space]
   (if (space-free? space) (first space) nil))
@@ -31,7 +31,7 @@
     (vec (remove nil? (map #(filter-possible-move %) (map-indexed vector board))))))
 
 (defn other-turn [gamestate]
-  (if (= "x" (:turn gamestate)) "o" "x"))
+  (if (= :x (:turn gamestate)) :o :x))
 
 (defn add-play-to-movelist [gamestate index]
   (conj (:movelist gamestate) index))
