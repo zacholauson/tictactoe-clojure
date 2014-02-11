@@ -1,6 +1,18 @@
 (ns ttt-clojure.ai-spec
   (:require [speclj.core :refer :all]
-            [ttt-clojure.ai :refer :all]))
+            [ttt-clojure.ai :refer :all]
+            [ttt-clojure.gamestate :refer :all]))
+
+(defn playout-every-game [gamestate]
+  (if (xs-turn? gamestate) (let [new-gamestate (move gamestate (find-move gamestate))]
+                                (if (game-over? new-gamestate) true
+                                    (map (fn [possible-move]
+                                             (let [newer-gamestate (move new-gamestate possible-move)]
+                                                  (cond
+                                                    (win? newer-gamestate :o) false
+                                                    (win? newer-gamestate :x) true
+                                                    :else (playout-every-game newer-gamestate)))) (possible-moves new-gamestate))))))
+
 
 (describe "leaf-score"
   (it "should return the leaf score for the given gamestate"
@@ -21,7 +33,9 @@
     (should= 3 (find-move {:movelist [0 1] :board [:x :o :-
                                                    :- :- :-
                                                    :- :- :-]})))
-  (it "should block if a possition is available that could allow o to win"
+  (it "should block if a position is available that could allow o to win"
     (should= 1 (find-move {:movelist [0 2 3] :board [:o :- :o
                                                      :x :- :-
-                                                     :x :- :-]}))))
+                                                     :x :- :-]})))
+  (it "when playing out every possible game they should all return true for win or tie"
+    (should= true (every? true? (remove nil? (flatten (playout-every-game {:movelist [] :board [:- :- :- :- :- :- :- :- :-]})))))))
