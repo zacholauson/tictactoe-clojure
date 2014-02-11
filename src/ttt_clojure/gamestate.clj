@@ -4,10 +4,14 @@
   (empty? (:movelist gamestate)))
 
 (defn xs-turn? [gamestate]
-  (if (<= (count (filter true? (map #(= :x %) (:board gamestate)))) (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
+  (if (<=
+        (count (filter true? (map #(= :x %) (:board gamestate))))
+        (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
 
 (defn os-turn? [gamestate]
-  (if (> (count (filter true? (map #(= :x %) (:board gamestate)))) (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
+  (if (>
+        (count (filter true? (map #(= :x %) (:board gamestate))))
+        (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
 
 (defn turn [gamestate]
   (cond
@@ -15,9 +19,7 @@
     (os-turn? gamestate) :o))
 
 (def winning-positions
-  [[0 1 2] [3 4 5] [6 7 8]
-   [0 3 6] [1 4 7] [2 5 8]
-   [0 4 8] [2 4 6]])
+  [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]])
 
 (defn winning-lines [gamestate]
   (map #(map (fn [line-piece] (nth (:board gamestate) line-piece)) %) winning-positions))
@@ -35,17 +37,21 @@
   (or (win? gamestate :x) (win? gamestate :o) (tied? gamestate)))
 
 (defn space-free? [space]
-  (if (= '(:-) (rest space)) true false))
+  (if (= '(:-) (rest space)) true
+      false))
 
 (defn filter-possible-move [space]
-  (if (space-free? space) (first space) nil))
+  (if (space-free? space) (first space)))
 
 (defn possible-moves [gamestate]
   (let [board (:board gamestate)]
-    (vec (remove nil? (map #(filter-possible-move %) (map-indexed vector board))))))
+    (vec
+      (remove nil? (map #(filter-possible-move %)
+                        (map-indexed vector board))))))
 
 (defn other-turn [gamestate]
-  (if (= :x (turn gamestate)) :o :x))
+  (if (= :x (turn gamestate)) :o
+      :x))
 
 (defn add-play-to-movelist [gamestate index]
   (conj (:movelist gamestate) index))

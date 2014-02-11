@@ -16,7 +16,7 @@
 
 (describe "os-turn?"
   (it "should evaluate the given gamestate and return true if its o's turn and false if not"
-    (should= false  (os-turn? {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}))
+    (should= false (os-turn? {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}))
     (should= true  (os-turn? {:movelist [] :board [:x :o :x :o :x :- :- :- :-]}))))
 
 (describe "turn"
@@ -69,7 +69,7 @@
 (describe "possible-moves"
   (it "should return a list of indexes for the possible moves"
     (should= [0 1 2 3 4 5 6 7 8] (possible-moves {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}))
-    (should= [4 5 7 8] (possible-moves {:movelist [] :board [:o :o :o :x :- :- :x :- :-]}))))
+    (should= [4 5 7 8]           (possible-moves {:movelist [] :board [:o :o :o :x :- :- :x :- :-]}))))
 
 (describe "other-turn"
   (it "should return :o when its :x's turn"
@@ -86,6 +86,5 @@
     (should= [:x :- :- :- :- :- :- :- :-] (add-play-to-board {:movelist [] :board [:- :- :- :- :- :- :- :- :-]} 0))))
 
 (describe "make-next-move"
-  (let [gamestate {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}]
-    (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
-      (should= {:movelist [0] :board [:x :- :- :- :- :- :- :- :-]} (move gamestate 0)))))
+  (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
+    (should= {:movelist [0] :board [:x :- :- :- :- :- :- :- :-]} (move {:movelist [] :board [:- :- :- :- :- :- :- :- :-]} 0))))

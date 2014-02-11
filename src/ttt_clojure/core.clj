@@ -4,9 +4,8 @@
             [ttt-clojure.display :refer :all]))
 
 (defn get-next-move [gamestate]
-  (cond
-    (= (turn gamestate) :x) (find-move gamestate)
-    (= (turn gamestate) :o) (ask-human-for-move gamestate)))
+  (if (xs-turn? gamestate) (find-move gamestate)
+      (ask-human-for-move gamestate)))
 
 (defn ttt [gamestate]
   (if (os-turn? gamestate) (format-board gamestate))
