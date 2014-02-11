@@ -1,5 +1,8 @@
 (ns ttt-clojure.display)
 
+(defn format-board [gamestate]
+  (doall (map println (partition 3 (:board gamestate)))))
+
 (defn parse-int [string]
   (cond
     (string? string) (Integer. (re-find  #"\d+" string ))

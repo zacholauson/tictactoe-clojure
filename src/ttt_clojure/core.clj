@@ -1,6 +1,5 @@
 (ns ttt-clojure.core
-  (:require [ttt-clojure.helper :refer :all]
-            [ttt-clojure.gamestate :refer :all]
+  (:require [ttt-clojure.gamestate :refer :all]
             [ttt-clojure.ai :refer :all]
             [ttt-clojure.display :refer :all]))
 
@@ -9,11 +8,8 @@
     (= (turn gamestate) :x) (find-move gamestate)
     (= (turn gamestate) :o) (ask-human-for-move gamestate)))
 
-(defn format-board [gamestate]
-  (doall (map println (partition 3 (:board gamestate)))))
-
 (defn ttt [gamestate]
-  (if (os-turn? gamestate) (format-board gamestate) nil)
+  (if (os-turn? gamestate) (format-board gamestate))
   (cond
     (win?  gamestate :x) (prn "x won")
     (win?  gamestate :o) (prn "o won")

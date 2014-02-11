@@ -1,5 +1,4 @@
-(ns ttt-clojure.gamestate
-  (:require [ttt-clojure.helper :refer :all]))
+(ns ttt-clojure.gamestate)
 
 (defn first-move? [gamestate]
   (empty? (:movelist gamestate)))
