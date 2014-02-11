@@ -12,9 +12,15 @@
 (defn ask-human-for-move
   ([gamestate]
     (println "Next Move: ")
-    (let [user-move (read-line)]
-      (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move) (ask-human-for-move gamestate "Invalid Move, Try Again "))))
+    (try
+      (let [user-move (read-line)]
+        (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move)
+                                   (ask-human-for-move gamestate "Invalid Move, Try Again ")))
+      (catch Exception e (ask-human-for-move gamestate "Invalid Move, Try Again "))))
   ([gamestate error-message]
-    (println gamestate) (println (str error-message))
-    (let [user-move (read-line)]
-      (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move) (ask-human-for-move gamestate "Invalid Move, Try Again ")))))
+    (try
+      (println (str error-message))
+      (let [user-move (read-line)]
+        (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move)
+                                   (ask-human-for-move gamestate "Invalid Move, Try Again ")))
+      (catch Exception e (ask-human-for-move gamestate "Invalid Move, Try Again ")))))
