@@ -88,4 +88,4 @@
 (describe "make-next-move"
   (let [gamestate {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}]
     (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
-      (should= {:movelist [0] :board [:x :- :- :- :- :- :- :- :-]} (make-next-move gamestate 0)))))
+      (should= {:movelist [0] :board [:x :- :- :- :- :- :- :- :-]} (move gamestate 0)))))

@@ -36,7 +36,7 @@
   (or (win? gamestate :x) (win? gamestate :o) (tied? gamestate)))
 
 (defn space-free? [space]
-  (if (= [:-] (rest space)) true false))
+  (if (= '(:-) (rest space)) true false))
 
 (defn filter-possible-move [space]
   (if (space-free? space) (first space) nil))
@@ -52,8 +52,9 @@
   (conj (:movelist gamestate) index))
 
 (defn add-play-to-board [gamestate index]
-  (assoc (:board gamestate) index (turn gamestate)))
+  (do
+    (assoc (:board gamestate) index (turn gamestate))))
 
-(defn make-next-move [gamestate index]
+(defn move [gamestate index]
   {:movelist (add-play-to-movelist gamestate index)
    :board (add-play-to-board gamestate index)})
