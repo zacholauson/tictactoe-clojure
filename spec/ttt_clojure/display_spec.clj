@@ -11,6 +11,6 @@
     (should-throw Exception "cannot convert given argument to integer" (parse-int ["test"]))))
 
 (describe "valid-move?"
-  (let [gamestate {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}]
+  (let [gamestate {:board [:- :- :- :- :- :- :- :- :-]}]
     (it "should return true if the given move is valid with the current gamestate"
       (should= true (valid-move? gamestate 0)))))

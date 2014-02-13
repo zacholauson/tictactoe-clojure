@@ -1,7 +1,7 @@
 (ns ttt-clojure.gamestate)
 
 (defn first-move? [gamestate]
-  (empty? (:movelist gamestate)))
+  (every? true? (map #(= :- %) (:board gamestate))))
 
 (defn xs-turn? [gamestate]
   (if (<=
@@ -53,13 +53,7 @@
   (if (= :x (turn gamestate)) :o
       :x))
 
-(defn add-play-to-movelist [gamestate index]
-  (conj (:movelist gamestate) index))
-
 (defn add-play-to-board [gamestate index]
-  (do
-    (assoc (:board gamestate) index (turn gamestate))))
+  (assoc (:board gamestate) index (turn gamestate)))
 
-(defn move [gamestate index]
-  {:movelist (add-play-to-movelist gamestate index)
-   :board (add-play-to-board gamestate index)})
+(defn move [gamestate index] {:board (add-play-to-board gamestate index)})

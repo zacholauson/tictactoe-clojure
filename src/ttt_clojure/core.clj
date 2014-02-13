@@ -16,4 +16,4 @@
     :else (ttt (move gamestate (get-next-move gamestate)))))
 
 (defn -main []
-  (ttt {:movelist [] :board [:- :- :- :- :- :- :- :- :-]}))
+  (ttt {:board [:- :- :- :- :- :- :- :- :-]}))
