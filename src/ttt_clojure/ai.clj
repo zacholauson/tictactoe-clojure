@@ -26,15 +26,16 @@
 
 (defn minimax [gamestate depth alpha beta]
   (if (or (game-over? gamestate) (= depth 5)) (leaf-score gamestate depth)
-      (if (even? depth)
-          (get-max-score gamestate depth alpha beta)
-          (get-min-score gamestate depth alpha beta))))
+      (if (even? depth) (get-max-score gamestate depth alpha beta)
+                        (get-min-score gamestate depth alpha beta))))
 
 (defn score-future-gamestates [gamestate]
   (into {} (for [possible-move (possible-moves gamestate)]
                 [possible-move (minimax (move gamestate possible-move) 1 -100 100)])))
 
+(defn eval-best-move-from-scores [scores]
+  (first (last (select-keys scores (for [[index score] scores :when (max-score? score scores)] index)))))
+
 (defn find-move [gamestate]
   (if (first-move? gamestate) 0
-      (let [scores (score-future-gamestates gamestate)]
-           (first (last (select-keys scores (for [[index score] scores :when (max-score? score scores)] index)))))))
+      (eval-best-move-from-scores (score-future-gamestates gamestate))))
