@@ -2,6 +2,20 @@
   (:require [speclj.core :refer :all]
             [ttt-clojure.display :refer :all]))
 
+(describe "prompt"
+  (it "should ask for input and return the user-input"
+    (should= "1"
+      (with-in-str "1"
+        (prompt "Insert a number"))))
+  (it "should ask for input and return the user-input if passes given validation"
+    (should= "1"
+      (with-in-str "1"
+        (prompt "Insert a string" #(string? %)))))
+  (it "should ask for input and return the user-input if passes validation and should return value in given type"
+    (should= 1
+      (with-in-str "1"
+        (prompt "Insert an integer" #(integer? %) :int)))))
+
 (describe "parse-int"
   (it "should return the integer version of the string passed to it"
     (should= 1 (parse-int "1")))

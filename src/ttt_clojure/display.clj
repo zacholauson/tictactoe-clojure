@@ -9,21 +9,30 @@
     (integer? string) string
     :else (throw (Exception. "cannot convert given argument to integer"))))
 
+(defn prompt
+  ([prompt-message]
+    (println (str prompt-message))
+    (read-line))
+  ([prompt-message validation]
+    (try
+      (println (str prompt-message))
+      (let [user-input (read-line)]
+           (if (validation user-input) user-input
+               (prompt prompt-message validation)))
+      (catch Exception e (prompt prompt-message validation))))
+  ([prompt-message validation return-type]
+    (println (str prompt-message))
+    (try (let [user-input (read-line)]
+              (let [parsed-input (cond (= return-type :int) (parse-int user-input)
+                                       (= return-type :str) (str user-input)
+                                       :else user-input)]
+                   (if (validation parsed-input)
+                       parsed-input
+                       (prompt validation return-type))))
+          (catch Exception e (prompt prompt-message validation return-type)))))
+
 (defn valid-move? [gamestate move]
   (= :- (get (:board gamestate) move)))
 
-(defn ask-human-for-move
-  ([gamestate]
-    (println "Next Move: ")
-    (try
-      (let [user-move (read-line)]
-        (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move)
-                                   (ask-human-for-move gamestate "Invalid Move, Try Again ")))
-      (catch Exception e (ask-human-for-move gamestate "Invalid Move, Try Again "))))
-  ([gamestate error-message]
-    (try
-      (println (str error-message))
-      (let [user-move (read-line)]
-        (if (valid-move? gamestate (parse-int user-move)) (parse-int user-move)
-                                   (ask-human-for-move gamestate "Invalid Move, Try Again ")))
-      (catch Exception e (ask-human-for-move gamestate "Invalid Move, Try Again ")))))
+(defn ask-human-for-move [gamestate]
+  (prompt "Next Move: " #(valid-move? gamestate %) :int))
