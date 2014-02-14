@@ -4,19 +4,15 @@
   (every? true? (map #(= :- %) (:board gamestate))))
 
 (defn xs-turn? [gamestate]
-  (if (<=
-        (count (filter true? (map #(= :x %) (:board gamestate))))
-        (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
+  (<= (count (filter true? (map #(= :x %) (:board gamestate))))
+      (count (filter true? (map #(= :o %) (:board gamestate))))))
 
 (defn os-turn? [gamestate]
-  (if (>
-        (count (filter true? (map #(= :x %) (:board gamestate))))
-        (count (filter true? (map #(= :o %) (:board gamestate))))) true false))
+  (> (count (filter true? (map #(= :x %) (:board gamestate))))
+     (count (filter true? (map #(= :o %) (:board gamestate))))))
 
 (defn turn [gamestate]
-  (cond
-    (xs-turn? gamestate) :x
-    (os-turn? gamestate) :o))
+  (if (xs-turn? gamestate) :x :o))
 
 (def winning-positions
   [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]])
@@ -28,30 +24,26 @@
   (some #(true? %) (map (fn [line] (every? #{piece} line)) (winning-lines gamestate))))
 
 (defn tied? [gamestate]
-  (every? #(true? %) (map (fn [line]
-                            (and
-                              (if (some #{:x} line) true false)
-                              (if (some #{:o} line) true false))) (winning-lines gamestate))))
+  (every? true? (map (fn [line] (and (if (some #{:x} line) true false)
+                                     (if (some #{:o} line) true false)))
+                     (winning-lines gamestate))))
 
 (defn game-over? [gamestate]
-  (or (win? gamestate :x) (win? gamestate :o) (tied? gamestate)))
+  (or (win? gamestate :x)
+      (win? gamestate :o)
+      (tied? gamestate)))
 
 (defn space-free? [space]
-  (if (= '(:-) (rest space)) true
-      false))
+  (= '(:-) (rest space)))
 
 (defn filter-possible-move [space]
   (if (space-free? space) (first space)))
 
 (defn possible-moves [gamestate]
-  (let [board (:board gamestate)]
-    (vec
-      (remove nil? (map #(filter-possible-move %)
-                        (map-indexed vector board))))))
+  (vec (remove nil? (map #(filter-possible-move %) (map-indexed vector (:board gamestate))))))
 
 (defn other-turn [gamestate]
-  (if (= :x (turn gamestate)) :o
-      :x))
+  (if (= :x (turn gamestate)) :o :x))
 
 (defn add-play-to-board [gamestate index]
   (assoc (:board gamestate) index (turn gamestate)))
