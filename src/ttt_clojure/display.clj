@@ -1,7 +1,24 @@
 (ns ttt-clojure.display)
 
+(defn format-space [space]
+  (if (= (rest space) [:-]) (first space) (name (last space))))
+
+(defn index-board [gamestate]
+  (map #(format-space %)
+       (map-indexed vector (:board gamestate))))
+
 (defn format-board [gamestate]
-  (doall (map println (partition 3 (:board gamestate)))))
+  (map #(interpose "|" %) (vec (partition 3 (index-board gamestate)))))
+
+(defn display-board [gamestate]
+  (do
+    (newline)
+    (println (first (format-board gamestate)))
+    (println "------------")
+    (println (second (format-board gamestate)))
+    (println "------------")
+    (println (last (format-board gamestate)))
+    (newline)))
 
 (defn parse-int [string]
   (cond

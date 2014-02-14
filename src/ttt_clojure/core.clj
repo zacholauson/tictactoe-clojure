@@ -8,7 +8,7 @@
       (ask-human-for-move gamestate)))
 
 (defn ttt [gamestate]
-  (if (os-turn? gamestate) (format-board gamestate))
+  (if (os-turn? gamestate) (display-board gamestate))
   (cond
     (win?  gamestate :x) (prn "x won")
     (win?  gamestate :o) (prn "o won")
