@@ -5,8 +5,8 @@
 
 (defn leaf-score [gamestate depth]
   (cond
-    (win? gamestate :x) (+ 10 depth)
-    (win? gamestate :o) (+ -10 depth)
+    (win? gamestate (:computer gamestate)) (+ 10 depth)
+    (win? gamestate (human-mark gamestate)) (+ -10 depth)
     :else 0))
 
 (defn max-score? [score scores]

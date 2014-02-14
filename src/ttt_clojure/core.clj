@@ -4,11 +4,11 @@
             [ttt-clojure.display :refer :all]))
 
 (defn get-next-move [gamestate]
-  (if (xs-turn? gamestate) (find-move gamestate)
+  (if (computers-turn? gamestate) (find-move gamestate)
       (ask-human-for-move gamestate)))
 
 (defn ttt [gamestate]
-  (if (os-turn? gamestate) (display-board gamestate))
+  (if (not (computers-turn? gamestate)) (display-board gamestate))
   (cond
     (win?  gamestate :x) (prn "x won")
     (win?  gamestate :o) (prn "o won")
@@ -16,4 +16,5 @@
     :else (ttt (move gamestate (get-next-move gamestate)))))
 
 (defn -main []
-  (ttt {:board [:- :- :- :- :- :- :- :- :-]}))
+  (let [who-goes-first (ask-for-who-should-go-first)]
+       (ttt {:board [:- :- :- :- :- :- :- :- :-] :computer (if (= who-goes-first :computer) :x :o)})))

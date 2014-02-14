@@ -4,30 +4,33 @@
             [ttt-clojure.gamestate :refer :all]))
 
 (defn playout-every-game [gamestate]
-  (if (xs-turn? gamestate) (let [new-gamestate (move gamestate (find-move gamestate))]
-                                (if (game-over? new-gamestate) true
-                                    (map (fn [possible-move]
-                                             (let [newer-gamestate (move new-gamestate possible-move)]
-                                                  (cond
-                                                    (win? newer-gamestate :o) [newer-gamestate false]
-                                                    (win? newer-gamestate :x) true
-                                                    :else (playout-every-game newer-gamestate))))
-                                         (possible-moves new-gamestate))))))
+  (if (computers-turn? gamestate) (let [new-gamestate (move gamestate (find-move gamestate))]
+                                       (if (game-over? new-gamestate) true
+                                           (map (fn [possible-move]
+                                                    (let [newer-gamestate (move new-gamestate possible-move)]
+                                                         (cond
+                                                           (win? newer-gamestate (:computer newer-gamestate)) true
+                                                           (win? newer-gamestate (human-mark newer-gamestate)) [newer-gamestate false]
+                                                           :else (playout-every-game newer-gamestate))))
+                                                (possible-moves new-gamestate))))))
 
 (describe "leaf-score"
   (it "should return the leaf score for the given gamestate"
-    (should=  10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-]} 0))
-    (should= -10 (leaf-score {:board [:o :o :o :x :- :- :x :- :-]} 0))
-    (should=   0 (leaf-score {:board [:x :o :o :o :x :x :x :x :o]} 0))))
+    (should=  10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-] :computer :x} 0))
+    (should= -10 (leaf-score {:board [:o :o :o :x :- :- :x :- :-] :computer :x} 0))
+    (should=   0 (leaf-score {:board [:x :o :o :o :x :x :x :x :o] :computer :x} 0))
+    (should=  10 (leaf-score {:board [:o :o :o :x :- :- :x :- :x] :computer :o} 0))
+    (should= -10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-] :computer :o} 0))
+    (should=   0 (leaf-score {:board [:x :o :o :o :x :x :x :x :o] :computer :o} 0))))
 
 (describe "minimax"
   (it "should return 0 if its the first move"
-    (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-]})))
+    (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-] :computer :x})))
   (it "should return take the win if its available"
-    (should= 0 (find-move {:board [:- :x :x :o :o :x :- :- :o]})))
+    (should= 0 (find-move {:board [:- :x :x :o :o :x :- :- :o] :computer :x})))
   (it "should block :o from winning if theres a chance"
-    (should= 1 (find-move {:board [:o :- :o :x :- :- :x :- :-]})))
-  (it "should block if a position is available that could allow o to win"
-    (should= 6 (find-move {:board [:x :x :o :- :o :- :- :- :-]})))
-  (it "when playing out every possible game they should all return true for win or tie"
-    (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]})))))))
+    (should= 1 (find-move {:board [:o :- :o :x :- :- :x :- :-] :computer :x})))
+  (it "when playing out every possible game they should all return true for win or tie when computer goes first"
+    (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-] :computer :x}))))))
+  (it "when playing out every possible game they should all return true for win or tie when human goes first"
+    (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-] :computer :o})))))))

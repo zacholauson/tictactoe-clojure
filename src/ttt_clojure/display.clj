@@ -4,8 +4,7 @@
   (if (= (rest space) [:-]) (first space) (name (last space))))
 
 (defn index-board [gamestate]
-  (map #(format-space %)
-       (map-indexed vector (:board gamestate))))
+  (map format-space (map-indexed vector (:board gamestate))))
 
 (defn format-board [gamestate]
   (map #(interpose "|" %) (vec (partition 3 (index-board gamestate)))))
@@ -53,3 +52,10 @@
 
 (defn ask-human-for-move [gamestate]
   (prompt "Next Move: " #(valid-move? gamestate %) :int))
+
+(defn includes? [matchers string]
+  (some matchers (clojure.string/split string #"")))
+
+(defn ask-for-who-should-go-first []
+  (let [user-input (prompt "Who do you want to go first? (computer | human)")]
+       (if (includes? #{"c" "C"} user-input) :computer :human)))

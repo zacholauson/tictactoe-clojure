@@ -25,6 +25,11 @@
   (it "should return :o if there is an lesser or equal number of :x's than :o's"
     (should= :x (turn {:board [:x :o :x :o :- :- :- :- :-]}))))
 
+(describe "computers-turn?"
+  (it "should return true if its the computers turn based on the gamestate"
+    (should= true (computers-turn? {:board [:x :o :x :o :- :- :- :- :-] :computer :x}))
+    (should= true (computers-turn? {:board [:x :o :x :o :x :- :- :- :-] :computer :o}))))
+
 (describe "winning-lines"
   (it "should return a vector of all winning lines with whatever piece is in each position"
     (should= [[:- :- :-] [:- :- :-] [:- :- :-] [:- :- :-] [:- :- :-] [:- :- :-] [:- :- :-] [:- :- :-]]
@@ -83,4 +88,4 @@
 
 (describe "make-next-move"
   (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
-    (should= {:board [:x :- :- :- :- :- :- :- :-]} (move {:board [:- :- :- :- :- :- :- :- :-]} 0))))
+    (should= {:board [:x :- :- :- :- :- :- :- :-] :computer :o} (move {:board [:- :- :- :- :- :- :- :- :-] :computer :o} 0))))
