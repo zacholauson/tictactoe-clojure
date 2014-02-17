@@ -16,5 +16,8 @@
     :else (ttt (move gamestate (get-next-move gamestate)))))
 
 (defn -main []
-  (let [who-goes-first (ask-for-who-should-go-first)]
-       (ttt {:board [:- :- :- :- :- :- :- :- :-] :computer (if (= who-goes-first :computer) :x :o)})))
+  (let [who-goes-first (ask-for-who-should-go-first)
+        difficulty-setting (ask-for-difficulty)]
+       (ttt {:board [:- :- :- :- :- :- :- :- :-]
+             :computer (if (= who-goes-first :computer) :x :o)
+             :options {:difficulty difficulty-setting}})))

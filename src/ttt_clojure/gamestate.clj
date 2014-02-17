@@ -59,4 +59,5 @@
 
 (defn move [gamestate index]
   {:board (add-play-to-board gamestate index)
-   :computer (:computer gamestate)})
+   :computer (:computer gamestate)
+   :options (:options gamestate)})

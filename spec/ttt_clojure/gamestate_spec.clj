@@ -88,4 +88,8 @@
 
 (describe "make-next-move"
   (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
-    (should= {:board [:x :- :- :- :- :- :- :- :-] :computer :o} (move {:board [:- :- :- :- :- :- :- :- :-] :computer :o} 0))))
+    (should= {:board [:x :- :- :- :- :- :- :- :-]
+              :computer :o
+              :options {:difficulty :unbeatable}} (move {:board [:- :- :- :- :- :- :- :- :-]
+                                                         :computer :o
+                                                         :options {:difficulty :unbeatable}} 0))))

@@ -25,9 +25,14 @@
   (apply min (cons beta  (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta)))))
 
 (defn minimax [gamestate depth alpha beta]
-  (if (or (game-over? gamestate) (= depth 5)) (leaf-score gamestate depth)
-      (if (even? depth) (get-max-score gamestate depth alpha beta)
-                        (get-min-score gamestate depth alpha beta))))
+  (let [difficulty (:difficulty (:options gamestate))
+        difficulty-depth (cond
+                           (= difficulty :unbeatable) 5
+                           (= difficulty :medium) 1
+                           :else 5)]
+    (if (or (game-over? gamestate) (= depth difficulty-depth)) (leaf-score gamestate depth)
+        (if (even? depth) (get-max-score gamestate depth alpha beta)
+                          (get-min-score gamestate depth alpha beta)))))
 
 (defn score-future-gamestates [gamestate]
   (into {} (for [possible-move (possible-moves gamestate)]

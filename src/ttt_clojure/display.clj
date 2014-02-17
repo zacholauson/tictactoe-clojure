@@ -59,3 +59,7 @@
 (defn ask-for-who-should-go-first []
   (let [user-input (prompt "Who do you want to go first? (computer | human)")]
        (if (includes? #{"c" "C"} user-input) :computer :human)))
+
+(defn ask-for-difficulty []
+  (let [user-input (prompt "What difficulty would you like? (unbeatable | medium)")]
+       (if (includes? #{"m" "M" "i" "I"} user-input) :medium :unbeatable)))
