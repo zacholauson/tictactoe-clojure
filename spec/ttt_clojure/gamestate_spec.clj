@@ -7,6 +7,11 @@
     (it "should return true if the game is brand new || no moves have been taken"
       (should= true (first-move? gamestate)))))
 
+(describe "count-of"
+  (it "should return the count of the given piece in the board"
+    (should= 2 (count-of {:board [:x :x :o :- :- :- :- :- :-]} :x))
+    (should= 1 (count-of {:board [:x :x :o :- :- :- :- :- :-]} :o))))
+
 (describe "xs-turn?"
   (it "should evaluate the given gamestate and return true if its x's turn and false if not"
     (should= true  (xs-turn? {:board [:- :- :- :- :- :- :- :- :-]}))
@@ -48,6 +53,11 @@
       (it "should return true if 'o' has won"
         (should= true (win? gamestate :o)))))
 
+(describe "has-piece?"
+  (it "should return true if the given collection has the piece"
+    (should= true (has-piece? [:- :x :o] :x))
+    (should= true (has-piece? [:- :x :o] :o))))
+
 (describe "tied?"
   (let [gamestate {:board [:x :o :o :o :x :x :x :x :o]}]
     (it "should return true when no one has won and no more spaces are available"
@@ -81,6 +91,11 @@
     (should= :o (other-turn {:board [:x :o :o :- :- :- :- :- :-]})))
   (it "should return :x when its :o's turn"
     (should= :x (other-turn {:board [:o :x :x :x :o :- :- :- :-]}))))
+
+(describe "human-mark"
+  (it "should return the humans piece based on the computers piece"
+    (should= :x (human-mark {:board [:- :- :- :- :- :- :- :- :-] :computer :o}))
+    (should= :o (human-mark {:board [:- :- :- :- :- :- :- :- :-] :computer :x}))))
 
 (describe "add-play-to-board"
   (it "should return an updated board with the current players turn on the board"

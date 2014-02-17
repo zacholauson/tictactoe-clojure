@@ -4,13 +4,15 @@
   (every? #(= :- %) (:board gamestate)))
 
 (defn count-of [gamestate piece]
-  (count (filter true? (map #(= piece %) (:board gamestate)))))
+  (count (filter #(= piece %) (:board gamestate))))
 
 (defn xs-turn? [gamestate]
-  (<= (count-of gamestate :x) (count-of gamestate :o)))
+  (<= (count-of gamestate :x)
+      (count-of gamestate :o)))
 
 (defn os-turn? [gamestate]
-  (> (count-of gamestate :x) (count-of gamestate :o)))
+  (> (count-of gamestate :x)
+     (count-of gamestate :o)))
 
 (defn turn [gamestate]
   (cond
@@ -29,9 +31,12 @@
 (defn win? [gamestate piece]
   (some true? (map (fn [line] (every? #{piece} line)) (winning-lines gamestate))))
 
+(defn has-piece? [collection piece]
+  (if (some #{piece} collection) true false))
+
 (defn tied? [gamestate]
-  (every? true? (map (fn [line] (and (if (some #{:x} line) true false)
-                                     (if (some #{:o} line) true false)))
+  (every? true? (map (fn [line]
+                         (and (has-piece? line :x) (has-piece? line :o)))
                      (winning-lines gamestate))))
 
 (defn game-over? [gamestate]
@@ -58,6 +63,6 @@
   (assoc (:board gamestate) index (turn gamestate)))
 
 (defn move [gamestate index]
-  {:board (add-play-to-board gamestate index)
+  {:board    (add-play-to-board gamestate index)
    :computer (:computer gamestate)
-   :options (:options gamestate)})
+   :options  (:options gamestate)})
