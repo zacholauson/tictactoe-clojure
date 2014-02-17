@@ -3,16 +3,22 @@
             [ttt-clojure.ai :refer :all]
             [ttt-clojure.gamestate :refer :all]))
 
+(defn computer-win-or-tie [gamestate]
+  (or (win? gamestate (:computer gamestate)) (tied? gamestate)))
+
 (defn playout-every-game [gamestate]
-  (if (computers-turn? gamestate) (let [new-gamestate (move gamestate (find-move gamestate))]
-                                       (if (game-over? new-gamestate) true
-                                           (map (fn [possible-move]
-                                                    (let [newer-gamestate (move new-gamestate possible-move)]
-                                                         (cond
-                                                           (win? newer-gamestate (:computer newer-gamestate)) true
-                                                           (win? newer-gamestate (human-mark newer-gamestate)) [newer-gamestate false]
-                                                           :else (playout-every-game newer-gamestate))))
-                                                (possible-moves new-gamestate))))))
+  (if (computers-turn? gamestate)
+    (let [new-gamestate (move gamestate (find-move gamestate))
+          computer-won-or-tied (computer-win-or-tie new-gamestate)]
+      (if computer-won-or-tied
+        true
+        (map (fn [possible-move]
+               (let [newer-gamestate (move new-gamestate possible-move)]
+                 (cond
+                   (win? newer-gamestate (:computer newer-gamestate)) true
+                   (win? newer-gamestate (human-mark newer-gamestate)) [newer-gamestate false]
+                   :else (playout-every-game newer-gamestate))))
+             (possible-moves new-gamestate))))))
 
 (describe "leaf-score"
   (it "should return the leaf score for the given gamestate"

@@ -1,15 +1,16 @@
 (ns ttt-clojure.gamestate)
 
 (defn first-move? [gamestate]
-  (every? true? (map #(= :- %) (:board gamestate))))
+  (every? #(= :- %) (:board gamestate)))
+
+(defn count-of [gamestate piece]
+  (count (filter true? (map #(= piece %) (:board gamestate)))))
 
 (defn xs-turn? [gamestate]
-  (<= (count (filter true? (map #(= :x %) (:board gamestate))))
-      (count (filter true? (map #(= :o %) (:board gamestate))))))
+  (<= (count-of gamestate :x) (count-of gamestate :o)))
 
 (defn os-turn? [gamestate]
-  (> (count (filter true? (map #(= :x %) (:board gamestate))))
-     (count (filter true? (map #(= :o %) (:board gamestate))))))
+  (> (count-of gamestate :x) (count-of gamestate :o)))
 
 (defn turn [gamestate]
   (cond
@@ -56,4 +57,6 @@
 (defn add-play-to-board [gamestate index]
   (assoc (:board gamestate) index (turn gamestate)))
 
-(defn move [gamestate index] {:board (add-play-to-board gamestate index) :computer (:computer gamestate)})
+(defn move [gamestate index]
+  {:board (add-play-to-board gamestate index)
+   :computer (:computer gamestate)})
