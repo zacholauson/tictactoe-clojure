@@ -25,11 +25,10 @@
   (apply min (cons beta  (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta)))))
 
 (defn minimax [gamestate depth alpha beta]
-  (let [difficulty (:difficulty (:options gamestate))
-        difficulty-depth (cond
-                           (= difficulty :unbeatable) 5
-                           (= difficulty :medium) 1
-                           :else 5)]
+  (let [difficulty-depth (case (difficulty gamestate)
+                            :unbeatable 5
+                            :medium 1
+                            5)]
     (if (or (game-over? gamestate) (= depth difficulty-depth)) (leaf-score gamestate depth)
         (if (even? depth) (get-max-score gamestate depth alpha beta)
                           (get-min-score gamestate depth alpha beta)))))
@@ -41,6 +40,16 @@
 (defn eval-best-move-from-scores [scores]
   (first (last (select-keys scores (for [[index score] scores :when (max-score? score scores)] index)))))
 
-(defn find-move [gamestate]
+(defn calculate-move [gamestate]
   (if (first-move? gamestate) 0
       (eval-best-move-from-scores (score-future-gamestates gamestate))))
+
+(defn get-random-move [gamestate]
+  (rand-nth (possible-moves gamestate)))
+
+(defn find-move [gamestate]
+  (let [medium-or-unbeatable-difficulty? (or (= (difficulty gamestate) :unbeatable)
+                                             (= (difficulty gamestate) :medium    ))]
+    (if medium-or-unbeatable-difficulty?
+      (calculate-move  gamestate)
+      (get-random-move gamestate))))

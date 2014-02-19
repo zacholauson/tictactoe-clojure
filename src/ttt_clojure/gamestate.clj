@@ -62,6 +62,9 @@
 (defn add-play-to-board [gamestate index]
   (assoc (:board gamestate) index (turn gamestate)))
 
+(defn difficulty [gamestate]
+  (:difficulty (:options gamestate)))
+
 (defn move [gamestate index]
   {:board    (add-play-to-board gamestate index)
    :computer (:computer gamestate)

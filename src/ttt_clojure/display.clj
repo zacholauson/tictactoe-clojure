@@ -57,9 +57,16 @@
   (some matchers (clojure.string/split string #"")))
 
 (defn ask-for-who-should-go-first []
-  (let [user-input (prompt "Who do you want to go first? (computer | human)")]
-       (if (includes? #{"c" "C"} user-input) :computer :human)))
+  (let [user-input (prompt "Who do you want to go first? \n 1 : computer \n 2 : human ")]
+       (case user-input
+          "1" :computer
+          "2" :human
+          (ask-for-who-should-go-first))))
 
 (defn ask-for-difficulty []
-  (let [user-input (prompt "What difficulty would you like? (unbeatable | medium)")]
-       (if (includes? #{"m" "M" "i" "I"} user-input) :medium :unbeatable)))
+  (let [user-input (prompt "What difficulty would you like? \n 1 : unbeatable \n 2 : medium \n 3 : easy ")]
+       (case user-input
+          "1" :unbeatable
+          "2" :medium
+          "3" :easy
+          (ask-for-difficulty))))
