@@ -72,8 +72,9 @@
 
 (defn ask-for-board-size []
   (clear-screen)
-  (let [user-input (prompt "What size board would you like? \n 3 : 3 x 3 \n 4 : 4 x 4")]
+  (let [user-input (prompt "What size board would you like? \n 3 : 3 x 3 \n 4 : 4 x 4 \n 5 : 5 x 5")]
        (case user-input
           "3" 3
           "4" 4
+          "5" 5
           (ask-for-board-size))))

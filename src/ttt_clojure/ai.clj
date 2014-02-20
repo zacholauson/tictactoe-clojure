@@ -15,27 +15,35 @@
 (defn within-range? [beta gamestate-score]
   (< gamestate-score beta))
 
-(defn playout-child-gamestates [gamestate depth alpha beta]
-  (map #(minimax (move gamestate %) (inc depth) alpha beta) (possible-moves gamestate)))
+(defn playout-child-gamestates [gamestate depth alpha beta depth-limit]
+  (map #(minimax (move gamestate %) (inc depth) alpha beta depth-limit) (possible-moves gamestate)))
 
-(defn get-max-score [gamestate depth alpha beta]
-  (apply max (cons alpha (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta)))))
+(defn get-max-score [gamestate depth alpha beta depth-limit]
+  (apply max (cons alpha (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta depth-limit)))))
 
-(defn get-min-score [gamestate depth alpha beta]
-  (apply min (cons beta  (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta)))))
+(defn get-min-score [gamestate depth alpha beta depth-limit]
+  (apply min (cons beta  (filter #(within-range? beta %) (playout-child-gamestates gamestate depth alpha beta depth-limit)))))
 
-(defn minimax [gamestate depth alpha beta]
-  (let [difficulty-depth (case (difficulty gamestate)
-                            :unbeatable 5
-                            :medium 1
+(defn calculate-depth-limit [gamestate]
+  (let [board-size-depths (case (count (:board gamestate))
+                             9  [5 1]
+                             16 [3 1]
+                             25 [3 1]
+                             [5 1])
+        difficulty-depth (case (difficulty gamestate)
+                            :unbeatable (first board-size-depths)
+                            :medium (last board-size-depths)
                             5)]
-    (if (or (game-over? gamestate) (= depth difficulty-depth)) (leaf-score gamestate depth)
-        (if (even? depth) (get-max-score gamestate depth alpha beta)
-                          (get-min-score gamestate depth alpha beta)))))
+    difficulty-depth))
+
+(defn minimax [gamestate depth alpha beta depth-limit]
+  (if (or (game-over? gamestate) (= depth depth-limit)) (leaf-score gamestate depth)
+      (if (even? depth) (get-max-score gamestate depth alpha beta depth-limit)
+                        (get-min-score gamestate depth alpha beta depth-limit))))
 
 (defn score-future-gamestates [gamestate]
   (into {} (for [possible-move (possible-moves gamestate)]
-                [possible-move (minimax (move gamestate possible-move) 1 -100 100)])))
+                [possible-move (minimax (move gamestate possible-move) 1 -100 100 (calculate-depth-limit gamestate))])))
 
 (defn eval-best-move-from-scores [scores]
   (first (last (select-keys scores (for [[index score] scores :when (max-score? score scores)] index)))))

@@ -22,7 +22,7 @@
 
 (describe "leaf-score"
   (context "3x3 board"
-    (it "should return the leaf score for the given gamestate"
+    (it "should return the correct leaf score for the given gamestate"
       (should=  10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-] :computer :x} 0))
       (should= -10 (leaf-score {:board [:o :o :o :x :- :- :x :- :-] :computer :x} 0))
       (should=   0 (leaf-score {:board [:x :o :o :o :x :x :x :x :o] :computer :x} 0))
@@ -30,13 +30,21 @@
       (should= -10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-] :computer :o} 0))
       (should=   0 (leaf-score {:board [:x :o :o :o :x :x :x :x :o] :computer :o} 0))))
   (context "4x4 board"
-    (it "should return the leaf score for the given gamestate"
+    (it "should return the correct leaf score for the given gamestate"
       (should=  10 (leaf-score {:board [:x :x :x :x :o :o :o :- :o :- :- :- :- :- :- :-] :computer :x} 0))
       (should= -10 (leaf-score {:board [:o :o :o :o :x :x :x :- :x :- :- :- :- :- :- :-] :computer :x} 0))
       (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x} 0))
       (should=  10 (leaf-score {:board [:o :o :o :o :x :x :x :- :x :- :- :- :- :- :- :-] :computer :o} 0))
       (should= -10 (leaf-score {:board [:x :x :x :x :o :o :o :- :o :- :- :- :- :- :- :-] :computer :o} 0))
-      (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0)))))
+      (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0))))
+  (context "5x5 board"
+    (it "should return the correct leaf score for the given gamestate"
+      (should=  10 (leaf-score {:board [:x :x :x :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x} 0))
+      (should= -10 (leaf-score {:board [:o :o :o :o :o :x :x :x :x :- :x :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x} 0))
+      (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x} 0))
+      (should=  10 (leaf-score {:board [:o :o :o :o :o :x :x :x :x :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0))
+      (should= -10 (leaf-score {:board [:x :x :x :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0))
+      (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0)))))
 
 (describe "minimax"
   (context "3x3 board"
@@ -79,4 +87,13 @@
     (xit "when playing out every possible game they should all return true for win or tie when the computer goes first on a 4x4 board"
       (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
                                                                           :computer :x
-                                                                          :options {:difficulty :unbeatable}}))))))))
+                                                                          :options {:difficulty :unbeatable}})))))))
+  (context "5x5 board"
+    (it "should return 0 if its the first move"
+      (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
+                             :computer :x
+                             :options {:difficulty :unbeatable}})))
+    (it "should take the win if its available"
+      (should= 2 (find-move {:board [:x :x :- :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
+                             :computer :x
+                             :options {:difficulty :unbeatable}})))))
