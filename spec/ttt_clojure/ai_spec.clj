@@ -83,11 +83,8 @@
     (it "should take the win if its available"
       (should= 2 (find-move {:board [:x :x :- :x :o :o :o :- :- :- :- :- :- :- :- :-]
                              :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (xit "when playing out every possible game they should all return true for win or tie when the computer goes first on a 4x4 board"
-      (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
-                                                                          :computer :x
-                                                                          :options {:difficulty :unbeatable}})))))))
+                             :options {:difficulty :unbeatable}}))))
+
   (context "5x5 board"
     (it "should return 0 if its the first move"
       (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
