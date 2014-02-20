@@ -1,33 +1,26 @@
-(ns ttt-clojure.display)
+(ns ttt-clojure.display
+  (:require [clojure.math.numeric-tower :as math]))
 
 (defn clear-screen []
   (print "\u001b[2J")
   (print "\u001B[0;0f"))
-
-(defn format-space [space]
-  (if (= (rest space) [:-]) (first space) (name (last space))))
-
-(defn index-board [gamestate]
-  (map format-space (map-indexed vector (:board gamestate))))
-
-(defn format-board [gamestate]
-  (map #(interpose "|" %) (vec (partition 3 (index-board gamestate)))))
-
-(defn display-board [gamestate]
-  (do
-    (clear-screen)
-    (println (first (format-board gamestate)))
-    (println "------------")
-    (println (second (format-board gamestate)))
-    (println "------------")
-    (println (last (format-board gamestate)))
-    (newline)))
 
 (defn parse-int [string]
   (cond
     (string? string) (Integer. (re-find  #"\d+" string ))
     (integer? string) string
     :else (throw (Exception. "cannot convert given argument to integer"))))
+
+(defn index-board [board]
+  (map-indexed #(if (= :- %2) (format "%2s" %1) (format "%2s" (name %2))) board))
+
+(defn print-board [gamestate]
+  (clear-screen)
+  (let [board (:board gamestate)
+        rows (partition (math/sqrt (count board)) (index-board board))]
+    (loop [print-lines (map #(interpose " |" %) rows)]
+      (apply println (first print-lines))
+      (if (not (empty? (rest print-lines))) (recur (rest print-lines))))))
 
 (defn prompt
   ([prompt-message]
@@ -76,3 +69,11 @@
           "2" :medium
           "3" :easy
           (ask-for-difficulty))))
+
+(defn ask-for-board-size []
+  (clear-screen)
+  (let [user-input (prompt "What size board would you like? \n 3 : 3 x 3 \n 4 : 4 x 4")]
+       (case user-input
+          "3" 3
+          "4" 4
+          (ask-for-board-size))))

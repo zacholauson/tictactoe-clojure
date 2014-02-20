@@ -22,11 +22,20 @@
 (defn computers-turn? [gamestate]
   (= (turn gamestate) (:computer gamestate)))
 
-(def winning-positions
+(def three-by-three-winning-positions
   [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]])
 
+(def four-by-four-winning-positions
+  [[0 1 2 3] [4 5 6 7] [8 9 10 11] [12 13 14 15] [0 4 8 12] [1 5 9 13] [2 6 10 14] [3 7 11 15] [0 5 10 15] [3 6 9 12]])
+
+(defn winning-positions [gamestate]
+  (cond
+    (= (count (:board gamestate)) 9) three-by-three-winning-positions
+    (= (count (:board gamestate)) 16) four-by-four-winning-positions
+    :else three-by-three-winning-positions))
+
 (defn winning-lines [gamestate]
-  (map #(map (fn [line-piece] (nth (:board gamestate) line-piece)) %) winning-positions))
+  (map #(map (fn [line-piece] (nth (:board gamestate) line-piece)) %) (winning-positions gamestate)))
 
 (defn win? [gamestate piece]
   (some true? (map (fn [line] (every? #{piece} line)) (winning-lines gamestate))))

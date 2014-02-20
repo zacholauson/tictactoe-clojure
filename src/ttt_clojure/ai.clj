@@ -40,7 +40,7 @@
 (defn eval-best-move-from-scores [scores]
   (first (last (select-keys scores (for [[index score] scores :when (max-score? score scores)] index)))))
 
-(defn calculate-move [gamestate]
+(defn get-calculated-move [gamestate]
   (if (first-move? gamestate) 0
       (eval-best-move-from-scores (score-future-gamestates gamestate))))
 
@@ -51,5 +51,5 @@
   (let [medium-or-unbeatable-difficulty? (or (= (difficulty gamestate) :unbeatable)
                                              (= (difficulty gamestate) :medium    ))]
     (if medium-or-unbeatable-difficulty?
-      (calculate-move  gamestate)
+      (get-calculated-move  gamestate)
       (get-random-move gamestate))))
