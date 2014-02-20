@@ -1,5 +1,9 @@
 (ns ttt-clojure.display)
 
+(defn clear-screen []
+  (print "\u001b[2J")
+  (print "\u001B[0;0f"))
+
 (defn format-space [space]
   (if (= (rest space) [:-]) (first space) (name (last space))))
 
@@ -11,7 +15,7 @@
 
 (defn display-board [gamestate]
   (do
-    (newline)
+    (clear-screen)
     (println (first (format-board gamestate)))
     (println "------------")
     (println (second (format-board gamestate)))
@@ -44,7 +48,7 @@
                                        :else user-input)]
                    (if (validation parsed-input)
                        parsed-input
-                       (prompt validation return-type))))
+                       (prompt prompt-message validation return-type))))
           (catch Exception e (prompt prompt-message validation return-type)))))
 
 (defn valid-move? [gamestate move]
@@ -57,6 +61,7 @@
   (some matchers (clojure.string/split string #"")))
 
 (defn ask-for-who-should-go-first []
+  (clear-screen)
   (let [user-input (prompt "Who do you want to go first? \n 1 : computer \n 2 : human ")]
        (case user-input
           "1" :computer
@@ -64,6 +69,7 @@
           (ask-for-who-should-go-first))))
 
 (defn ask-for-difficulty []
+  (clear-screen)
   (let [user-input (prompt "What difficulty would you like? \n 1 : unbeatable \n 2 : medium \n 3 : easy ")]
        (case user-input
           "1" :unbeatable
