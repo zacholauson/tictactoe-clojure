@@ -46,6 +46,20 @@
       (should= -10 (leaf-score {:board [:x :x :x :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0))
       (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0)))))
 
+(describe "calculate-depth-limit"
+  (context "3x3 board"
+    (it "should calculate the correct depth limit for the given gamestate"
+      (should= 5 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
+      (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}}))))
+  (context "4x4 board"
+    (it "should calculate the correct depth limit for the given gamestate"
+      (should= 3 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
+      (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}}))))
+  (context "5x5 board"
+    (it "should calculate the correct depth limit for the given gamestate"
+      (should= 3 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
+      (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}})))))
+
 (describe "minimax"
   (context "3x3 board"
     (it "should return 0 if its the first move"
