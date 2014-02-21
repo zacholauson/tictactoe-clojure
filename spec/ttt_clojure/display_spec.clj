@@ -28,3 +28,36 @@
   (let [gamestate {:board [:- :- :- :- :- :- :- :- :-]}]
     (it "should return true if the given move is valid with the current gamestate"
       (should= true (valid-move? gamestate 0)))))
+
+(describe "ask-for-who-should-go-first"
+  (it "should ask for who should go first and return the chosen option"
+    (should= :computer
+      (with-in-str "1"
+        (ask-for-who-should-go-first)))
+    (should= :human
+      (with-in-str "2"
+        (ask-for-who-should-go-first)))))
+
+(describe "ask-for-difficulty"
+  (it "should ask for the difficulty you want to play and return the chosen option"
+    (should= :unbeatable
+      (with-in-str "1"
+        (ask-for-difficulty)))
+    (should= :medium
+      (with-in-str "2"
+        (ask-for-difficulty)))
+    (should= :easy
+      (with-in-str "3"
+        (ask-for-difficulty)))))
+
+(describe "ask-for-board-size"
+  (it "should ask for the board size you want to play and then return the chosen board size"
+    (should= 3
+      (with-in-str "3"
+        (ask-for-board-size)))
+    (should= 4
+      (with-in-str "4"
+        (ask-for-board-size)))
+    (should= 5
+      (with-in-str "5"
+        (ask-for-board-size)))))

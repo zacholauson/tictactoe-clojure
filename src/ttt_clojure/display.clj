@@ -50,9 +50,6 @@
 (defn ask-human-for-move [gamestate]
   (prompt "Next Move: " #(valid-move? gamestate %) :int))
 
-(defn includes? [matchers string]
-  (some matchers (clojure.string/split string #"")))
-
 (defn ask-for-who-should-go-first []
   (clear-screen)
   (let [user-input (prompt "Who do you want to go first? \n 1 : computer \n 2 : human ")]
