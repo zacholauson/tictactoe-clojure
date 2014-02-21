@@ -50,7 +50,7 @@
   (context "3x3 board"
     (it "should calculate the correct depth limit for the given gamestate"
       (should= 5 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
-      (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}}))))
+      (should= 2 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}}))))
   (context "4x4 board"
     (it "should calculate the correct depth limit for the given gamestate"
       (should= 3 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
