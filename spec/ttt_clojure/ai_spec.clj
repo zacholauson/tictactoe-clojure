@@ -61,6 +61,7 @@
       (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}})))))
 
 (describe "minimax"
+  (tags :acceptance)
   (context "3x3 board"
     (it "should return 0 if its the first move"
       (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-]

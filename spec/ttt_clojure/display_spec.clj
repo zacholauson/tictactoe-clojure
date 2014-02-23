@@ -3,6 +3,9 @@
             [ttt-clojure.display :refer :all]))
 
 (describe "prompt"
+  (around [it]
+    (with-out-str (it)))
+
   (it "should ask for input and return the user-input"
     (should= "1"
       (with-in-str "1"
@@ -30,6 +33,9 @@
       (should= true (valid-move? gamestate 0)))))
 
 (describe "ask-for-who-should-go-first"
+  (around [it]
+    (with-out-str (it)))
+
   (it "should ask for who should go first and return the chosen option"
     (should= :computer
       (with-in-str "1"
@@ -39,6 +45,9 @@
         (ask-for-who-should-go-first)))))
 
 (describe "ask-for-difficulty"
+  (around [it]
+    (with-out-str (it)))
+
   (it "should ask for the difficulty you want to play and return the chosen option"
     (should= :unbeatable
       (with-in-str "1"
@@ -51,6 +60,9 @@
         (ask-for-difficulty)))))
 
 (describe "ask-for-board-size"
+  (around [it]
+    (with-out-str (it)))
+
   (it "should ask for the board size you want to play and then return the chosen board size"
     (should= 3
       (with-in-str "3"
