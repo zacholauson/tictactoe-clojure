@@ -39,9 +39,8 @@
                5))
 
 (defn calculate-depth-limit [gamestate]
-  (let [board-size-depths (get-depths-based-on-board-size (:board gamestate))
-        difficulty-depth  (get-depths-based-on-difficulty gamestate board-size-depths)]
-        difficulty-depth))
+  (->> (get-depths-based-on-board-size (:board gamestate))
+       (get-depths-based-on-difficulty gamestate)))
 
 (defn minimax [gamestate depth alpha beta depth-limit]
   (if (or (game-over? gamestate) (= depth depth-limit)) (leaf-score gamestate depth)

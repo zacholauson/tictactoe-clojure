@@ -48,12 +48,12 @@
   (apply mapv vector (rows board-size)))
 
 (defn calculate-winning-positions [gamestate]
-  (let [board-size      (count (:board gamestate))
-        row-size        (math/sqrt board-size)]
+  (let [board-size  (count (:board gamestate))
+        row-size    (math/sqrt board-size)]
        (->> (right-diag board-size)
-            (concat      (step (+ row-size 1) (range board-size)))
-            (concat      (columns board-size))
-            (concat      (rows board-size))
+            (concat (step (+ row-size 1) (range board-size)))
+            (concat (columns board-size))
+            (concat (rows board-size))
             (flatten)
             (partition row-size))))
 
