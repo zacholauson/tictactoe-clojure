@@ -1,4 +1,5 @@
-(ns ttt-clojure.gamestate)
+(ns ttt-clojure.gamestate
+  (:require [clojure.math.numeric-tower :as math]))
 
 (defn first-move? [gamestate]
   (every? #(= :- %) (:board gamestate)))
@@ -22,25 +23,42 @@
 (defn computers-turn? [gamestate]
   (= (turn gamestate) (:computer gamestate)))
 
-(def three-by-three-winning-positions
-  [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]])
+(defn step [step-num range-vec]
+  (loop [range-vec range-vec
+         return-col []]
+    (if (> (count range-vec) 0)
+      (let [return-col (conj return-col (first range-vec))]
+        (recur (drop step-num range-vec) return-col))
+       return-col)))
 
-(def four-by-four-winning-positions
-  [[0 1 2 3] [4 5 6 7] [8 9 10 11] [12 13 14 15]
-   [0 4 8 12] [1 5 9 13] [2 6 10 14] [3 7 11 15]
-   [0 5 10 15] [3 6 9 12]])
+(defn right-diag [board-size]
+  (let [range-vec (range board-size)
+        step-num (- (math/sqrt board-size) 1)]
+    (loop [range-vec range-vec
+           return-col []]
+      (if (< (+ (first range-vec) (+ step-num 1)) board-size)
+        (let [return-col (conj return-col (+ (first range-vec) step-num))]
+          (recur (drop step-num range-vec) return-col))
+        return-col))))
 
-(def five-by-five-winning-positions
-  [[0 1 2 3 4] [5 6 7 8 9] [10 11 12 13 14] [15 16 17 18 19] [20 21 22 23 24]
-   [0 5 10 15 20] [1 6 11 16 21] [2 7 12 17 22] [3 8 13 18 23] [4 9 14 19 24]
-   [0 6 12 18 24] [4 8 12 16 20]])
+(defn rows [board-size]
+  (partition (math/sqrt board-size) (range board-size)))
+
+(defn columns [board-size]
+  (apply mapv vector (rows board-size)))
+
+(defn calculate-winning-positions [gamestate]
+  (let [board-size      (count (:board gamestate))
+        row-size        (math/sqrt board-size)]
+       (->> (right-diag board-size)
+            (concat      (step (+ row-size 1) (range board-size)))
+            (concat      (columns board-size))
+            (concat      (rows board-size))
+            (flatten)
+            (partition row-size))))
 
 (defn winning-positions [gamestate]
-  (case (count (:board gamestate))
-    9  three-by-three-winning-positions
-    16 four-by-four-winning-positions
-    25 five-by-five-winning-positions
-    :else three-by-three-winning-positions))
+  (calculate-winning-positions gamestate))
 
 (defn winning-lines [gamestate]
   (map #(map (fn [line-piece] (nth (:board gamestate) line-piece)) %) (winning-positions gamestate)))

@@ -14,6 +14,11 @@
 (defn index-board [board]
   (map-indexed #(if (= :- %2) (format "%2s" %1) (format "%2s" (name %2))) board))
 
+(defn parse-input [input output-type]
+ (case output-type
+   :int (parse-int input)
+   :str (str input)))
+
 (defn print-board [gamestate]
   (clear-screen)
   (let [board (:board gamestate)
@@ -26,23 +31,13 @@
   ([prompt-message]
     (println (str prompt-message))
     (read-line))
-  ([prompt-message validation]
-    (try
-      (println (str prompt-message))
-      (let [user-input (read-line)]
-           (if (validation user-input) user-input
-               (prompt prompt-message validation)))
-      (catch Exception e (prompt prompt-message validation))))
   ([prompt-message validation return-type]
     (println (str prompt-message))
-    (try (let [user-input (read-line)]
-              (let [parsed-input (cond (= return-type :int) (parse-int user-input)
-                                       (= return-type :str) (str user-input)
-                                       :else user-input)]
-                   (if (validation parsed-input)
-                       parsed-input
-                       (prompt prompt-message validation return-type))))
-          (catch Exception e (prompt prompt-message validation return-type)))))
+    (let [user-input (read-line)]
+         (let [parsed-input (parse-input user-input return-type)]
+              (if (validation parsed-input)
+                  parsed-input
+                  (prompt prompt-message validation return-type))))))
 
 (defn valid-move? [gamestate move]
   (= :- (get (:board gamestate) move)))

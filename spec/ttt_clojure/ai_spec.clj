@@ -20,7 +20,7 @@
                    :else (playout-every-game newer-gamestate))))
              (possible-moves new-gamestate))))))
 
-(describe "leaf-score"
+(describe "#leaf-score"
   (context "3x3 board"
     (it "should return the correct leaf score for the given gamestate"
       (should=  10 (leaf-score {:board [:x :x :x :o :- :- :o :- :-] :computer :x} 0))
@@ -46,7 +46,7 @@
       (should= -10 (leaf-score {:board [:x :x :x :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0))
       (should=   0 (leaf-score {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :o} 0)))))
 
-(describe "calculate-depth-limit"
+(describe "#calculate-depth-limit"
   (context "3x3 board"
     (it "should calculate the correct depth limit for the given gamestate"
       (should= 5 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
@@ -60,7 +60,7 @@
       (should= 3 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
       (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}})))))
 
-(describe "minimax"
+(describe "#minimax"
   (tags :acceptance)
   (context "3x3 board"
     (it "should return 0 if its the first move"
