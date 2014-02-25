@@ -1,5 +1,5 @@
 (ns ttt-clojure.tic-tac-toe
-  (:require [ttt-clojure.gamestate :refer [move game-over? winner]]
+  (:require [ttt-clojure.gamestate          :refer [move game-over? winner]]
             [ttt-clojure.interface.player   :refer :all]
             [ttt-clojure.players.computer   :refer [new-computer]]
             [ttt-clojure.players.human      :refer [new-human]]

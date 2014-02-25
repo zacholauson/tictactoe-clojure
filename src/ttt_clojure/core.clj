@@ -1,5 +1,5 @@
 (ns ttt-clojure.core
-  (:require [ttt-clojure.gamestate          :refer [move create-board game-over? winner]]
+  (:require [ttt-clojure.gamestate          :refer [create-board]]
             [ttt-clojure.tic-tac-toe        :refer [ttt]]
             [ttt-clojure.interface.player   :refer :all]
             [ttt-clojure.players.computer   :refer [new-computer]]
