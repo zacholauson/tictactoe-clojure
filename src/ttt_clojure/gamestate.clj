@@ -47,18 +47,19 @@
 (defn columns [board-size]
   (apply mapv vector (rows board-size)))
 
-(defn calculate-winning-positions [gamestate]
-  (let [board-size  (count (:board gamestate))
-        row-size    (math/sqrt board-size)]
-       (->> (right-diag board-size)
-            (concat (step (+ row-size 1) (range board-size)))
-            (concat (columns board-size))
-            (concat (rows board-size))
-            (flatten)
-            (partition row-size))))
+(def calculate-winning-positions
+  (memoize
+    (fn [board-size]
+      (let [row-size (math/sqrt board-size)]
+           (->> (right-diag board-size)
+                (concat (step (+ row-size 1) (range board-size)))
+                (concat (columns board-size))
+                (concat (rows board-size))
+                (flatten)
+                (partition row-size))))))
 
 (defn winning-positions [gamestate]
-  (calculate-winning-positions gamestate))
+  (calculate-winning-positions (count (:board gamestate))))
 
 (defn winning-lines [gamestate]
   (map #(map (fn [line-piece] (nth (:board gamestate) line-piece)) %) (winning-positions gamestate)))

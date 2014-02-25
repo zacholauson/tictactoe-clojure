@@ -55,7 +55,7 @@
 (describe "#calculate-winning-positions"
   (it "should return the winning positions for board of the given gamestate"
     (should= [[0 1 2] [3 4 5] [6 7 8] [0 3 6] [1 4 7] [2 5 8] [0 4 8] [2 4 6]]
-      (calculate-winning-positions {:board [:- :- :- :- :- :- :- :- :-] :computer :x}))))
+      (calculate-winning-positions 9))))
 
 (describe "#winning-lines"
   (it "should return a vector of all winning lines with whatever piece is in each position"

@@ -42,10 +42,12 @@
   (->> (get-depths-based-on-board-size (:board gamestate))
        (get-depths-based-on-difficulty gamestate)))
 
-(defn minimax [gamestate depth alpha beta depth-limit]
-  (if (or (game-over? gamestate) (= depth depth-limit)) (leaf-score gamestate depth)
-      (if (even? depth) (get-max-score gamestate depth alpha beta depth-limit)
-                        (get-min-score gamestate depth alpha beta depth-limit))))
+(def minimax
+  (memoize
+    (fn [gamestate depth alpha beta depth-limit]
+      (if (or (game-over? gamestate) (= depth depth-limit)) (leaf-score gamestate depth)
+          (if (even? depth) (get-max-score gamestate depth alpha beta depth-limit)
+                            (get-min-score gamestate depth alpha beta depth-limit))))))
 
 (defn score-future-gamestates [gamestate]
   (into {} (for [possible-move (possible-moves gamestate)]
