@@ -30,7 +30,7 @@
          (let [parsed-input (parse-input user-input return-type)]
               (if (validation parsed-input)
                   parsed-input
-                  (prompt prompt-message validation return-type))))))
+                  (prompt display prompt-message validation return-type))))))
 
 (defn prompt-for-who-should-go-first [display]
   (clear-screen)
