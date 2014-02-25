@@ -83,6 +83,12 @@
       (win? gamestate :o)
       (tied? gamestate)))
 
+(defn winner [gamestate]
+  (cond
+    (win?  gamestate :x) "x won!"
+    (win?  gamestate :o) "o won!"
+    (tied? gamestate   ) "tied!"))
+
 (defn space-free? [space]
   (= '(:-) (rest space)))
 

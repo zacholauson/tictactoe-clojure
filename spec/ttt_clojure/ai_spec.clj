@@ -68,7 +68,7 @@
   (context "3x3 board"
     (context "computer goes first"
       (let [computer (new-computer :x)
-            human    (new-human :o)]
+            human    (new-human :o nil)]
         (it "should return 0 if its the first move"
           (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-]
                                  :players [computer human]
@@ -105,7 +105,7 @@
 
   (context "4x4 board"
     (let [computer (new-computer :x)
-          human    (new-human :o)]
+          human    (new-human :o nil)]
       (it "should return 0 if its the first move"
         (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
                                :players [computer human]
@@ -119,7 +119,7 @@
 
   (context "5x5 board"
     (let [computer (new-computer :x)
-          human    (new-human :o)]
+          human    (new-human :o nil)]
       (it "should return 0 if its the first move"
         (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
                                :players [computer human]

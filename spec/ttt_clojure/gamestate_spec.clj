@@ -130,10 +130,10 @@
 (describe "#add-play-to-board"
   (it "should return an updated board with the current players turn on the board"
     (should= [:x :- :- :- :- :- :- :- :-] (add-play-to-board {:board (parse-board "---------")
-                                                              :players [(new-computer :x) (new-human :o)]} 0))))
+                                                              :players [(new-computer :x) (new-human :o nil)]} 0))))
 
 (describe "#make-next-move"
-  (let [human (new-human :x)
+  (let [human (new-human :x nil)
         computer (new-computer :o)]
     (it "should take the next move index and put the current players marker on the board and swap to the other players turn"
       (should= {:board [:x :- :- :- :- :- :- :- :-]
