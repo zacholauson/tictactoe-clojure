@@ -29,17 +29,17 @@
 (defn step [step-num range-vec]
   (loop [range-vec range-vec
          return-col []]
-    (if (> (count range-vec) 0)
+    (if (pos? (count range-vec))
       (let [return-col (conj return-col (first range-vec))]
         (recur (drop step-num range-vec) return-col))
        return-col)))
 
 (defn right-diag [board-size]
   (let [range-vec (range board-size)
-        step-num (- (math/sqrt board-size) 1)]
+        step-num (dec (math/sqrt board-size))]
     (loop [range-vec range-vec
            return-col []]
-      (if (< (+ (first range-vec) (+ step-num 1)) board-size)
+      (if (< (+ (first range-vec) step-num 1) board-size)
         (let [return-col (conj return-col (+ (first range-vec) step-num))]
           (recur (drop step-num range-vec) return-col))
         return-col))))
@@ -55,7 +55,7 @@
     (fn [board-size]
       (let [row-size (math/sqrt board-size)]
            (->> (right-diag board-size)
-                (concat (step (+ row-size 1) (range board-size)))
+                (concat (step (inc row-size) (range board-size)))
                 (concat (columns board-size))
                 (concat (rows board-size))
                 (flatten)

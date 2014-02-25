@@ -38,8 +38,9 @@
                5))
 
 (defn calculate-depth-limit [gamestate]
-  (->> (get-depths-based-on-board-size (:board gamestate))
-       (get-depths-based-on-difficulty gamestate)))
+  (get-depths-based-on-difficulty
+    gamestate
+    (get-depths-based-on-board-size (:board gamestate))))
 
 (def minimax
   (memoize
