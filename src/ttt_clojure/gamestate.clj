@@ -1,5 +1,8 @@
 (ns ttt-clojure.gamestate
-  (:require [clojure.math.numeric-tower :as math]))
+  (:require [clojure.math.numeric-tower :as math]
+            [ttt-clojure.interface.player :refer :all]))
+
+(def empty-space :-)
 
 (defn first-move? [gamestate]
   (every? #(= :- %) (:board gamestate)))
@@ -21,7 +24,7 @@
     (os-turn? gamestate) :o))
 
 (defn computers-turn? [gamestate]
-  (= (turn gamestate) (:computer gamestate)))
+  (= (:computer gamestate) (turn gamestate)))
 
 (defn step [step-num range-vec]
   (loop [range-vec range-vec
@@ -89,19 +92,21 @@
 (defn possible-moves [gamestate]
   (vec (remove nil? (map filter-possible-move (map-indexed vector (:board gamestate))))))
 
-(defn other-turn [gamestate]
-  (if (= :x (turn gamestate)) :o :x))
-
 (defn human-mark [gamestate]
   (if (= :x (:computer gamestate)) :o :x))
 
 (defn add-play-to-board [gamestate index]
-  (assoc (:board gamestate) index (turn gamestate)))
+  (let [current-player-mark (piece (first (:players gamestate)))]
+    (assoc (:board gamestate) index current-player-mark)))
 
 (defn difficulty [gamestate]
   (:difficulty (:options gamestate)))
 
 (defn move [gamestate index]
   {:board    (add-play-to-board gamestate index)
+   :players  (reverse (:players gamestate))
    :computer (:computer gamestate)
    :options  (:options gamestate)})
+
+(defn create-board [board-size]
+  (vec (repeat (* board-size board-size) empty-space)))

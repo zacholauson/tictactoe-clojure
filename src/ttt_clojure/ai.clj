@@ -26,7 +26,6 @@
 
 (defn get-depths-based-on-board-size [board]
   (case (count board)
-    ; board size [unbeatable-depth medium-depth]
      9 [5 2]
     16 [3 1]
     25 [3 1]

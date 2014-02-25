@@ -1,7 +1,10 @@
 (ns ttt-clojure.ai-spec
   (:require [speclj.core :refer :all]
             [ttt-clojure.ai :refer :all]
-            [ttt-clojure.gamestate :refer :all]))
+            [ttt-clojure.gamestate :refer :all]
+            [ttt-clojure.interface.player :refer :all]
+            [ttt-clojure.players.human :refer [new-human]]
+            [ttt-clojure.players.computer :refer [new-computer]]))
 
 (defn computer-win-or-tie [gamestate]
   (or (win? gamestate (:computer gamestate)) (tied? gamestate)))
@@ -63,49 +66,67 @@
 (describe "#minimax"
   (tags :acceptance)
   (context "3x3 board"
-    (it "should return 0 if its the first move"
-      (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (it "should return take the win if its available"
-      (should= 0 (find-move {:board [:- :x :x :o :o :x :- :- :o]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (it "should block :o from winning if theres a chance"
-      (should= 1 (find-move {:board [:o :- :o :x :- :- :x :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (it "when playing out every possible game they should all return true for win or tie when computer goes first"
-      (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
-                                                                          :computer :x
-                                                                          :options {:difficulty :unbeatable}}))))))
-    (it "when playing out every possible game they should all return true for win or tie when human goes first"
-      (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
-                                                                          :computer :o
-                                                                          :options {:difficulty :unbeatable}}))))))
-    (it "should return a greater number of trues than falses when playing at medium difficulty"
-      (let [game-results (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
-                                                       :computer :x
-                                                       :options {:difficulty :medium}}))]
+    (context "computer goes first"
+      (let [computer (new-computer :x)
+            human    (new-human :o)]
+        (it "should return 0 if its the first move"
+          (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :-]
+                                 :players [computer human]
+                                 :computer :x
+                                 :options {:difficulty :unbeatable}})))
+        (it "should return take the win if its available"
+          (should= 0 (find-move {:board [:- :x :x :o :o :x :- :- :o]
+                                 :players [computer human]
+                                 :computer :x
+                                 :options {:difficulty :unbeatable}})))
+        (it "should block :o from winning if theres a chance"
+          (should= 1 (find-move {:board [:o :- :o :x :- :- :x :- :-]
+                                 :players [computer human]
+                                 :computer :x
+                                 :options {:difficulty :unbeatable}})))
+        (it "when playing out every possible game they should all return true for win or tie when computer goes first"
+          (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
+                                                                              :players [computer human]
+                                                                              :computer :x
+                                                                              :options {:difficulty :unbeatable}}))))))
+        (it "should return a greater number of trues than falses when playing at medium difficulty"
+          (let [game-results (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
+                                                           :players [computer human]
+                                                           :computer :x
+                                                           :options {:difficulty :medium}}))]
 
-        (should= true (> (count (filter true? game-results)) (count (filter false? game-results)))))))
+            (should= true (> (count (filter true? game-results)) (count (filter false? game-results))))))))
+
+    (context "human goes first"
+      (it "when playing out every possible game they should all return true for win or tie when human goes first"
+        (should= true (every? true? (distinct (flatten (playout-every-game {:board [:- :- :- :- :- :- :- :- :-]
+                                                                            :computer :o
+                                                                            :options {:difficulty :unbeatable}}))))))))
 
   (context "4x4 board"
-    (it "should return 0 if its the first move"
-      (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (it "should take the win if its available"
-      (should= 2 (find-move {:board [:x :x :- :x :o :o :o :- :- :- :- :- :- :- :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}}))))
+    (let [computer (new-computer :x)
+          human    (new-human :o)]
+      (it "should return 0 if its the first move"
+        (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
+                               :players [computer human]
+                               :computer :x
+                               :options {:difficulty :unbeatable}})))
+      (it "should take the win if its available"
+        (should= 2 (find-move {:board [:x :x :- :x :o :o :o :- :- :- :- :- :- :- :- :-]
+                               :players [computer human]
+                               :computer :x
+                               :options {:difficulty :unbeatable}})))))
 
   (context "5x5 board"
-    (it "should return 0 if its the first move"
-      (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))
-    (it "should take the win if its available"
-      (should= 2 (find-move {:board [:x :x :- :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
-                             :computer :x
-                             :options {:difficulty :unbeatable}})))))
+    (let [computer (new-computer :x)
+          human    (new-human :o)]
+      (it "should return 0 if its the first move"
+        (should= 0 (find-move {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
+                               :players [computer human]
+                               :computer :x
+                               :options {:difficulty :unbeatable}})))
+      (it "should take the win if its available"
+        (should= 2 (find-move {:board [:x :x :- :x :x :o :o :o :o :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-]
+                               :players [computer human]
+                               :computer :x
+                               :options {:difficulty :unbeatable}}))))))
