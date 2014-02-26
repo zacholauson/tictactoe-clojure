@@ -63,6 +63,17 @@
       (should= 3 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :unbeatable}}))
       (should= 1 (calculate-depth-limit {:board [:- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :- :-] :computer :x :options {:difficulty :medium}})))))
 
+(describe "#reached-depth-limit?"
+  (it "should return true if the current depth is past the depth limit"
+    (should= true (reached-depth-limit? 5 5))
+    (should= true (reached-depth-limit? 6 5)))
+  (it "should return false if the limit hasnt been reached"
+    (should= false (reached-depth-limit? 3 5))))
+
+(describe "#reached-the-end-of-the-tree?"
+  (it "should return true if the gamestate has hit the depth limit or someone has won or tied"
+    (should= true (reached-the-end-of-the-tree? {:board [:x :x :x :- :- :- :- :- :-]} 2 5))))
+
 (describe "#minimax"
   (tags :acceptance)
   (context "3x3 board"

@@ -42,10 +42,17 @@
     gamestate
     (get-depths-based-on-board-size (:board gamestate))))
 
+(defn reached-depth-limit? [depth depth-limit]
+  (>= depth depth-limit))
+
+(defn reached-the-end-of-the-tree? [gamestate depth depth-limit]
+  (or (game-over? gamestate)
+      (reached-depth-limit? depth depth-limit)))
+
 (def minimax
   (memoize
     (fn [gamestate depth alpha beta depth-limit]
-      (if (or (game-over? gamestate) (= depth depth-limit)) (leaf-score gamestate depth)
+      (if (reached-the-end-of-the-tree? gamestate depth depth-limit) (leaf-score gamestate depth)
           (if (even? depth) (get-max-score gamestate depth alpha beta depth-limit)
                             (get-min-score gamestate depth alpha beta depth-limit))))))
 
@@ -67,5 +74,5 @@
   (let [medium-or-unbeatable-difficulty? (or (= (difficulty gamestate) :unbeatable)
                                              (= (difficulty gamestate) :medium    ))]
     (if medium-or-unbeatable-difficulty?
-      (get-calculated-move  gamestate)
-      (get-random-move gamestate))))
+      (get-calculated-move gamestate)
+      (get-random-move     gamestate))))
