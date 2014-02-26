@@ -9,12 +9,16 @@
 (defn index-board [board]
   (map-indexed #(if (= :- %2) (format "%2s" %1) (format "%2s" (name %2))) board))
 
+(defn row-size [board]
+  (math/sqrt (count board)))
+
 (defn output-board [board]
   (clear-screen)
-  (let [rows (partition (math/sqrt (count board)) (index-board board))]
+  (let [rows (partition (row-size board) (index-board board))]
     (loop [print-lines (map #(interpose " |" %) rows)]
       (apply println (first print-lines))
-      (if (not (empty? (rest print-lines))) (recur (rest print-lines))))))
+      (if (not (empty? (rest print-lines)))
+        (recur (rest print-lines))))))
 
 (deftype Console []
   Display
