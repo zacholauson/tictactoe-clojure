@@ -67,12 +67,16 @@
   (if (first-move? gamestate) 0
       (eval-best-move-from-scores (score-future-gamestates gamestate))))
 
-(defn get-random-move [gamestate]
+(defmulti find-move difficulty)
+
+(defmethod find-move :unbeatable [gamestate]
+  (get-calculated-move gamestate))
+
+(defmethod find-move :medium [gamestate]
+  (get-calculated-move gamestate))
+
+(defmethod find-move :easy [gamestate]
   (rand-nth (possible-moves gamestate)))
 
-(defn find-move [gamestate]
-  (let [medium-or-unbeatable-difficulty? (or (= (difficulty gamestate) :unbeatable)
-                                             (= (difficulty gamestate) :medium    ))]
-    (if medium-or-unbeatable-difficulty?
-      (get-calculated-move gamestate)
-      (get-random-move     gamestate))))
+(defmethod find-move :default [gamestate]
+  (get-calculated-move gamestate))

@@ -14,4 +14,4 @@
 (defn ttt [gamestate display prompter]
   (print-board display (:board gamestate))
   (if (game-over? gamestate) (declare-winner display (winner gamestate))
-      (ttt (move gamestate (get-next-move gamestate)) display prompter)))
+      (recur (move gamestate (get-next-move gamestate)) display prompter)))
