@@ -21,7 +21,7 @@
                    (win? newer-gamestate (:computer newer-gamestate)) true
                    (win? newer-gamestate (human-mark newer-gamestate)) false
                    :else (playout-every-game newer-gamestate))))
-             (possible-moves new-gamestate))))))
+               (possible-moves new-gamestate))))))
 
 (describe "#leaf-score"
   (context "3x3 board"

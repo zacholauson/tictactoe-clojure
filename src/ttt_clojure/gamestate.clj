@@ -74,9 +74,7 @@
   (if (some #{piece} collection) true false))
 
 (defn tied? [gamestate]
-  (every? true? (map (fn [line]
-                         (and (has-piece? line :x) (has-piece? line :o)))
-                     (winning-lines gamestate))))
+  (every? true? (map #(and (has-piece? % :x) (has-piece? % :o)) (winning-lines gamestate))))
 
 (defn game-over? [gamestate]
   (or (win? gamestate :x)
@@ -101,12 +99,12 @@
 (defn human-mark [gamestate]
   (if (= :x (:computer gamestate)) :o :x))
 
+(defn difficulty [gamestate]
+  (-> gamestate :options :difficulty))
+
 (defn add-play-to-board [gamestate index]
   (let [current-player-mark (piece (first (:players gamestate)))]
     (assoc (:board gamestate) index current-player-mark)))
-
-(defn difficulty [gamestate]
-  (:difficulty (:options gamestate)))
 
 (defn move [gamestate index]
   {:board    (add-play-to-board gamestate index)

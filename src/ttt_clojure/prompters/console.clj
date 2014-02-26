@@ -13,9 +13,9 @@
     :else (throw (Exception. "cannot convert given argument to integer"))))
 
 (defn parse-input [input output-type]
- (case output-type
-   :int (parse-int input)
-   :str (str input)))
+  (case output-type
+    :int (parse-int input)
+    :str (str input)))
 
 (defn valid-move? [gamestate move]
   (= :- (get (:board gamestate) move)))

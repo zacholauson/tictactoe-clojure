@@ -127,6 +127,15 @@
     (should= :x (human-mark {:board (parse-board "---------") :computer :o}))
     (should= :o (human-mark {:board (parse-board "---------") :computer :x}))))
 
+(describe "difficulty"
+  (it "should return the difficulty for the given gamestate"
+    (should= :unbeatable
+      (difficulty {:board [:x :- :- :- :- :- :- :- :-] :computer :o :options {:difficulty :unbeatable}}))
+    (should= :medium
+      (difficulty {:board [:x :- :- :- :- :- :- :- :-] :computer :o :options {:difficulty :medium}}))
+    (should= :easy
+      (difficulty {:board [:x :- :- :- :- :- :- :- :-] :computer :o :options {:difficulty :easy}}))))
+
 (describe "#add-play-to-board"
   (it "should return an updated board with the current players turn on the board"
     (should= [:x :- :- :- :- :- :- :- :-] (add-play-to-board {:board (parse-board "---------")

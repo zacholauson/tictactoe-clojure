@@ -46,8 +46,7 @@
   (>= depth depth-limit))
 
 (defn reached-the-end-of-the-tree? [gamestate depth depth-limit]
-  (or (game-over? gamestate)
-      (reached-depth-limit? depth depth-limit)))
+  (or (game-over? gamestate) (reached-depth-limit? depth depth-limit)))
 
 (def minimax
   (memoize
@@ -65,7 +64,7 @@
 
 (defn get-calculated-move [gamestate]
   (if (first-move? gamestate) 0
-      (eval-best-move-from-scores (score-future-gamestates gamestate))))
+      (-> gamestate score-future-gamestates eval-best-move-from-scores)))
 
 (defmulti find-move difficulty)
 
@@ -76,7 +75,7 @@
   (get-calculated-move gamestate))
 
 (defmethod find-move :easy [gamestate]
-  (rand-nth (possible-moves gamestate)))
+  (-> gamestate possible-moves rand-nth))
 
 (defmethod find-move :default [gamestate]
   (get-calculated-move gamestate))

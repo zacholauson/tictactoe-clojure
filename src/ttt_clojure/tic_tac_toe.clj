@@ -9,7 +9,7 @@
             [ttt-clojure.prompters.console  :refer [new-console-prompter]]))
 
 (defn get-next-move [gamestate]
-  (next-move (first (:players gamestate)) gamestate))
+  (next-move (-> gamestate :players first) gamestate))
 
 (defn ttt [gamestate display prompter]
   (print-board display (:board gamestate))
