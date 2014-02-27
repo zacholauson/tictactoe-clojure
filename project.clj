@@ -1,4 +1,4 @@
-(defproject ttt-clojure "0.1.0-SNAPSHOT"
+(defproject ttt-clojure "0.1.0"
   :description "unbeatable tic tac toe"
   :url "https://github.com/zacholauson/tictactoe-clojure"
   :license {:name "Eclipse Public License"
