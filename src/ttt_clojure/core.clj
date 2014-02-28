@@ -6,6 +6,7 @@
             [ttt-clojure.players.human      :refer [new-human]]
             [ttt-clojure.interface.display  :refer :all]
             [ttt-clojure.displays.console   :refer [new-display-console]]
+            [ttt-clojure.displays.web       :refer [new-display-web]]
             [ttt-clojure.interface.prompter :refer :all]
             [ttt-clojure.prompters.console  :refer [new-console-prompter]]))
 
