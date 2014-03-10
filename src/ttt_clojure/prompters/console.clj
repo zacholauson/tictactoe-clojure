@@ -20,54 +20,33 @@
 (defn valid-move? [gamestate move]
   (= :- (get (:board gamestate) move)))
 
+(defn format-option [option]
+  (apply str (first option) " : " (rest option)))
+
 (defn prompt
-  ([display prompt-message]
-    (output display (str prompt-message))
+  ([display output-str]
+    (output display (str output-str))
     (read-line))
-  ([display prompt-message validation return-type]
-    (output display (str prompt-message))
-    (let [user-input (read-line)]
-         (let [parsed-input (parse-input user-input return-type)]
-              (if (validation parsed-input)
-                  parsed-input
-                  (prompt display prompt-message validation return-type))))))
-
-(defn prompt-for-who-should-go-first [display]
-  (clear-screen)
-  (let [user-input (prompt display "Who do you want to go first? \n 1 : computer \n 2 : human ")]
-       (case user-input
-          "1" :computer
-          "2" :human
-          (prompt-for-who-should-go-first display))))
-
-(defn prompt-for-difficulty [display]
-  (clear-screen)
-  (let [user-input (prompt display "What difficulty would you like? \n 1 : unbeatable \n 2 : medium \n 3 : easy ")]
-       (case user-input
-          "1" :unbeatable
-          "2" :medium
-          "3" :easy
-          (prompt-for-difficulty display))))
-
-(defn prompt-for-board-size [display]
-  (clear-screen)
-  (let [user-input (prompt display "What size board would you like? \n 3 : 3 x 3 \n 4 : 4 x 4 \n 5 : 5 x 5")]
-       (case user-input
-          "3" 3
-          "4" 4
-          "5" 5
-          (prompt-for-board-size display))))
+  ([display output-str option-collection]
+    (clear-screen)
+    (output display (str output-str))
+    (let [numbered-options (apply merge (map-indexed hash-map option-collection))]
+      (loop [options numbered-options]
+        (output display (format-option (first options)))
+          (if-not (empty? (rest options))
+            (recur (rest options))
+            (let [user-input (parse-int (read-line))
+                  option-keys (keys numbered-options)]
+              (if (some #{user-input} option-keys)
+                (get numbered-options user-input)
+                (prompt display output-str option-collection))))))))
 
 (deftype Console [-display]
   Prompter
+  (ask [this output-str option-collection]
+    (prompt -display  output-str option-collection))
   (ask-for-move [this gamestate]
-    (prompt -display "Next Move: " #(valid-move? gamestate %) :int))
-  (ask-for-first-player [this]
-    (prompt-for-who-should-go-first -display))
-  (ask-for-difficulty [this]
-    (prompt-for-difficulty -display))
-  (ask-for-board-size [this]
-    (prompt-for-board-size -display)))
+    (parse-int (prompt -display "Next Move "))))
 
 (defn new-console-prompter [display]
   (Console. display))

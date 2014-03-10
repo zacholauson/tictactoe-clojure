@@ -18,19 +18,19 @@
           human    (new-human :o prompter)
           gamestate {:board [:- :- :- :- :- :- :- :- :-] :players [computer human] :computer :x :options {:difficulty :unbeatable}}]
       (it "should ask the correct player for the next move"
-        (should= 0 (get-next-move gamestate)))))
-  (context "humans turn"
-    (around [it]
-      (with-out-str (it)))
-
-    (let [computer (new-computer :o)
-          human    (new-human :x prompter)
-          gamestate {:board [:- :- :- :- :- :- :- :- :-] :players [human computer] :computer :o :options {:difficulty :unbeatable}}]
-      (it "should ask the human what their next move should be"
-        (should= "Next Move: \n"
-          (with-out-str (with-in-str "1"
-            (get-next-move gamestate))))
-        (should= 1
-          (with-in-str "1"
-            (get-next-move gamestate)))))))
+        (should= 0 (get-next-move gamestate))))))
+  ;; (context "humans turn"
+  ;;   (around [it]
+  ;;     (with-out-str (it)))
+  ;;
+  ;;   (let [computer (new-computer :o)
+  ;;         human    (new-human :x prompter)
+  ;;         gamestate {:board [:- :- :- :- :- :- :- :- :-] :players [human computer] :computer :o :options {:difficulty :unbeatable}}]
+  ;;     (it "should ask the human what their next move should be"
+  ;;       (should= "Next Move: \n"
+  ;;         (with-out-str (with-in-str "1"
+  ;;           (get-next-move gamestate))))
+  ;;       (should= 1
+  ;;         (with-in-str "1"
+  ;;           (get-next-move gamestate)))))))
 
