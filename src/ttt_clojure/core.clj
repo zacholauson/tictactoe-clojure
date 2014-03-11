@@ -37,7 +37,7 @@
   (let [display            (new-display-console)
         prompter           (new-console-prompter display)
         gametype           (ask prompter "What gamemode would you like to play?" [:computer-vs-human :human-vs-computer :computer-vs-computer :human-vs-human])
-        row-size           (ask prompter "What board ( row ) size would you like?" [3 4 5] )
+        row-size           (ask prompter "What board ( row ) size would you like?" [3 4 5])
         gamestate          (build-gamestate display prompter row-size gametype)]
        (ttt gamestate display prompter)))
 

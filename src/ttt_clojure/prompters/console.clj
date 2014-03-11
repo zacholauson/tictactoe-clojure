@@ -33,13 +33,6 @@
   ([display output-str]
     (output display (str output-str))
     (read-line))
-  ([display output-str validation return-type]
-    (output display (str output-str))
-    (let [user-input (read-line)]
-         (let [parsed-input (parse-input user-input return-type)]
-              (if (validation parsed-input)
-                  parsed-input
-                  (prompt display output-str validation return-type)))))
   ([display output-str option-collection]
     (clear-screen)
     (output display (str output-str))
@@ -47,15 +40,22 @@
          (display-option-collection display numbered-options)
          (let [user-input (parse-int (read-line))
                option-keys (keys numbered-options)
-               valid-option? (if (some #(user-input) option-keys) true false)]
+               valid-option? (if (some #{user-input} option-keys) true false)]
               (if valid-option?
                 (get numbered-options user-input)
-                (prompt display output-str option-collection))))))
+                (prompt display output-str option-collection)))))
+  ([display output-str validation return-type]
+    (output display (str output-str))
+    (let [user-input (read-line)
+          parsed-input (parse-input user-input return-type)]
+         (if (validation parsed-input)
+             parsed-input
+             (prompt display output-str validation return-type)))))
 
 (deftype Console [-display]
   Prompter
   (ask [this output-str option-collection]
-    (prompt -display  output-str option-collection))
+    (prompt -display output-str option-collection))
   (ask-for-move [this gamestate]
     (prompt -display "Next Move: " #(valid-move? gamestate %) :int)))
 
